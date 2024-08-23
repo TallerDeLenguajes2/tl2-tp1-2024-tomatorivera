@@ -12,5 +12,10 @@ public class Cadeteria
         listadoCadetes = new List<Cadete>();
     }
 
-    
+    public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
+
+    public override string ToString()
+    {
+        return $"CADETERIA: {nombre} - {telefono}";
+    }
 }

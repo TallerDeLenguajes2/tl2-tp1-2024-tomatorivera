@@ -6,13 +6,13 @@ public class Cadete
     private string telefono;
     private List<Pedido> pedidos;
 
-    public Cadete(int id, string nombre, string direccion, string telefono, List<Pedido> pedidos)
+    public Cadete(int id, string nombre, string direccion, string telefono)
     {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.pedidos = pedidos;
+        this.pedidos = new List<Pedido>();
     }
 
     public float JornalACobrar()
@@ -30,5 +30,10 @@ public class Cadete
     {
         // TODO
         return new List<Pedido>();
+    }
+
+    public override string ToString()
+    {
+        return $"CLIENTE: {id} - {nombre} - {direccion} - {telefono}";
     }
 }
