@@ -91,7 +91,7 @@
                             break;
 
                         default:
-                            Console.WriteLine("\n\n*** Saliendo...");
+                            Console.WriteLine("\nSaliendo...");
                             break;
                     }
                 }
@@ -102,6 +102,19 @@
             }
         }
         while (opcionSeleccionada != opcionSalida);
+
+        System.Console.WriteLine("\n\n\n*** INFORME ***\n");
+
+        System.Console.WriteLine("* Envíos de cada cadete:");
+        int totalEnvios = 0;
+        foreach (var cadete in cadeteria.ListadoCadetes)
+        {
+            System.Console.WriteLine($"\t> CADETE ID {cadete.Id} ({cadete.Nombre}) - Envíos terminados: {cadete.BuscarPedidos(Estado.COMPLETADO).Count()} - Envíos pendientes: {cadete.BuscarPedidos(Estado.PENDIENTE).Count()}");
+            totalEnvios += cadete.Pedidos.Count();
+        }
+        System.Console.WriteLine($"\n* Envíos totales del día: {totalEnvios}");
+        
+        System.Console.WriteLine($"* Promedio de envíos por cadete: {cadeteria.ListadoCadetes.Select(c => c.Pedidos.Count()).Average()}");
     }
 
     private static Cadeteria CrearCadeteria()
