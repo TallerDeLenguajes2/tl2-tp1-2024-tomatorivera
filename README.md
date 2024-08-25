@@ -33,3 +33,8 @@ En cuánto a los métodos, en este ejemplo haría todos públicos.
 
 **¿Cómo diseñaría los constructores de cada una de las clases?**
 
+Realizaría constructores completos, excepto en las clases *Cadeteria* y *Cadete* puesto que las listas las iniciaría en el mismo constructor.
+
+**¿Se le ocurre otra forma que podría haberse realizado el diseño de clases?**
+
+Lo único que se me ocurre que se podría haber agregado, es una generalización de *Cadete*  y *Cliente* en *Persona* para no repetir atributos.
