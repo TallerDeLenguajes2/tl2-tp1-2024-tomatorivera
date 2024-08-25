@@ -5,8 +5,8 @@
         try
         {
             // Cargo los datos de los csv
-            var cadeteria = crearCadeteria();
-            cargarCadetes(cadeteria);
+            var cadeteria = CrearCadeteria();
+            CargarCadetes(cadeteria);
         }
         catch (Exception ex)
         {
@@ -67,7 +67,7 @@
         while (opcionSeleccionada != opcionSalida);
     }
 
-    private static Cadeteria crearCadeteria()
+    private static Cadeteria CrearCadeteria()
     {
         var datosCsv = LeerCsv("datos_cadeteria.csv");
         var datos = datosCsv[0].Split(",");
@@ -77,7 +77,7 @@
         return new Cadeteria(datos[0], datos[1]);
     }
 
-    private static void cargarCadetes(Cadeteria cadeteria)
+    private static void CargarCadetes(Cadeteria cadeteria)
     {
         var datosCsv = LeerCsv("datos_cadetes.csv");
 
@@ -90,7 +90,7 @@
                 continue;
             }
 
-            cadeteria.ListadoCadetes.Add(new Cadete(int.Parse(datos[0]), datos[1], datos[2], datos[3]));
+            cadeteria.AltaCadete(new Cadete(int.Parse(datos[0]), datos[1], datos[2], datos[3]));
         }
     }
 
