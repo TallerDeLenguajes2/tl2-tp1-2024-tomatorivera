@@ -1,16 +1,19 @@
 public class Pedido
 {
+    private static int ultimoNumeroGenerado = 0;
+    
     private int numero;
     private string observaciones;
     private Cliente cliente;
     private Estado estado;
 
-    public Pedido(int numero, string observaciones, Cliente cliente, Estado estado)
+    public Pedido(string observaciones, Cliente cliente)
     {
-        this.numero = numero;
+        numero = ++ultimoNumeroGenerado; // El ID se auto genera de manera consecutiva
+        estado = Estado.PENDIENTE; // El estado de un pedido al instanciarse siempre es pendiente
+
         this.observaciones = observaciones;
         this.cliente = cliente;
-        this.estado = estado;
     }
 
     public int Numero { get => numero; set => numero = value; }
@@ -24,5 +27,10 @@ public class Pedido
     public string VerDireccionCliente()
     {
         return $"Pedido NRO. {numero} - Dirección del cliente: {cliente.Direccion}";
+    }
+
+    public override string ToString()
+    {
+        return $"PEDIDO NRO. {numero} - Obs.: {observaciones} - Cliente: {cliente.Nombre} - Estado: {estado}";
     }
 }

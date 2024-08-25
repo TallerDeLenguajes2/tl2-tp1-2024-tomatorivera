@@ -16,6 +16,7 @@ public class Cliente
     }
 
     public string Direccion { get => direccion; set => direccion = value; }
+    public string Nombre { get => nombre; set => nombre = value; }
 
     public override string ToString()
     {

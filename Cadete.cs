@@ -20,6 +20,7 @@ public class Cadete
 
     public int Id { get => id; set => id = value; }
     public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
+    public string Nombre { get => nombre; set => nombre = value; }
 
     public float JornalACobrar()
     {
@@ -31,19 +32,8 @@ public class Cadete
         return pedidos.Where(p => p.Estado == estado).ToList();
     }
 
-    public void ModificarEstadoPedido(int nroPedido, Estado nuevoEstado)
-    {
-        var p = pedidos.Where(p => p.Numero == nroPedido).FirstOrDefault();
-        if (p != null)
-        {
-            p.Estado = nuevoEstado;
-        }
-        else
-            throw new Exception($"No se ha encontrado un pedido con número: {nroPedido} (cadete id {id})");
-    }
-
     public override string ToString()
     {
-        return $"CLIENTE: {id} - {nombre} - {direccion} - {telefono}";
+        return $"CADETE: {id} - {nombre} - {direccion} - {telefono}";
     }
 }
