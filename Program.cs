@@ -1,4 +1,6 @@
-﻿internal class Program
+﻿using System.IO.Compression;
+
+internal class Program
 {
     private static Cadeteria cadeteria;
 
@@ -13,6 +15,7 @@
         catch (Exception ex)
         {
             MostrarError(ex.Message);
+            return;
         }
 
         int opcionSeleccionada = 0;
@@ -53,10 +56,10 @@
 
                         case 2:
                             if (!cadeteria.ListadoCadetes.Any()) throw new Exception("No hay cadetes a los cuales asignarles pedidos");
-                            if (!cadeteria.ListadoPedidos.Any()) throw new Exception("No hay pedidos sin asignar");
+                            if (!cadeteria.PedidosTomados.Any()) throw new Exception("No hay pedidos sin asignar");
 
                             System.Console.WriteLine("\n\n*** ASIGNANDO UN PEDIDO ***\n");
-                            var pedidoB = SolicitarSeleccionPedido(cadeteria.ListadoPedidos);
+                            var pedidoB = SolicitarSeleccionPedido(cadeteria.PedidosTomados);
                             System.Console.WriteLine();
                             var cadete = SolicitarSeleccionCadete();
                             cadeteria.AsignarCadete(cadete, pedidoB);
@@ -78,7 +81,7 @@
                             break;
 
                         case 4:
-                            var pedidosAsignados = cadeteria.ObtenerPedidosAsignados();
+                            var pedidosAsignados = cadeteria.PedidosAsignados;
                             if (!pedidosAsignados.Any()) throw new Exception("No hay pedidos para reasignar");
 
                             System.Console.WriteLine("\n\n*** REASIGNANDO UN PEDIDO ***\n");
@@ -86,7 +89,8 @@
                             var pedidoD = SolicitarSeleccionPedido(pedidosAsignados);
                             System.Console.WriteLine();
                             var cadeteB = SolicitarSeleccionCadete();
-                            cadeteria.AsignarCadete(cadeteB, pedidoD);
+
+                            pedidoD.Cadete = cadeteB;
                             MostrarResultadoExitoso($"El pedido nro. {pedidoD.Numero} ha sido re-asignado al cadete {cadeteB.Nombre} ({cadeteB.Id})");
                             break;
 
@@ -109,12 +113,19 @@
         int totalEnvios = 0;
         foreach (var cadete in cadeteria.ListadoCadetes)
         {
-            System.Console.WriteLine($"\t> CADETE ID {cadete.Id} ({cadete.Nombre}) - Envíos terminados: {cadete.BuscarPedidos(Estado.COMPLETADO).Count()} - Envíos pendientes: {cadete.BuscarPedidos(Estado.PENDIENTE).Count()}");
-            totalEnvios += cadete.Pedidos.Count();
+            int nEnviosCompletados = cadeteria.BuscarPedidos(cadete.Id)
+                                              .Where(p => p.Estado == Estado.COMPLETADO)
+                                              .Count();
+            int nEnviosPendientes = cadeteria.BuscarPedidos(cadete.Id)
+                                             .Where(p => p.Estado == Estado.PENDIENTE)
+                                             .Count();
+            int totalPedidos = nEnviosCompletados + nEnviosPendientes;
+
+            System.Console.WriteLine($"\t> CADETE ID {cadete.Id} ({cadete.Nombre}) - Envíos terminados: {nEnviosCompletados} Envíos pendientes: {nEnviosPendientes}");
+            totalEnvios += totalPedidos;
         }
+
         System.Console.WriteLine($"\n* Envíos totales del día: {totalEnvios}");
-        
-        System.Console.WriteLine($"* Promedio de envíos por cadete: {cadeteria.ListadoCadetes.Select(c => c.Pedidos.Count()).Average()}");
     }
 
     private static Cadeteria CrearCadeteria()
@@ -154,7 +165,7 @@
             {
                 // Salto la cabecera
                 if (tieneCabecera) readerCsv.ReadLine();
-                
+
                 while (readerCsv.Peek() != -1)
                 {
                     var linea = readerCsv.ReadLine();
@@ -196,12 +207,12 @@
         var telefono = Console.ReadLine() ?? string.Empty;
         if (string.IsNullOrWhiteSpace(telefono)) throw new Exception("El teléfono no puede estar vacío");
 
-        System.Console.Write("> Ingrese la dirección del cliente: ");        
+        System.Console.Write("> Ingrese la dirección del cliente: ");
         var direccion = Console.ReadLine() ?? string.Empty;
         if (string.IsNullOrWhiteSpace(direccion)) throw new Exception("La dirección no puede estar vacía");
 
-        System.Console.Write("> Ingrese datos o referencias de la dirección del cliente (opcional): ");        
-        var datosRerencia= Console.ReadLine() ?? string.Empty;
+        System.Console.Write("> Ingrese datos o referencias de la dirección del cliente (opcional): ");
+        var datosRerencia = Console.ReadLine() ?? string.Empty;
 
         return new Cliente(dni, nombre, direccion, telefono, datosRerencia);
     }
@@ -232,8 +243,8 @@
 
         var pedidoSeleccionado = pedidos.Where(p => p.Numero == nroPedido).FirstOrDefault();
         if (pedidoSeleccionado == null)
-            throw new Exception($"El número de pedido ingresado es inválido ({nroPedido})");   
-    
+            throw new Exception($"El número de pedido ingresado es inválido ({nroPedido})");
+
         return pedidoSeleccionado;
     }
 
@@ -255,7 +266,7 @@
         var cadeteSeleccionado = cadeteria.ListadoCadetes.Where(cadete => cadete.Id == id).FirstOrDefault();
         if (cadeteSeleccionado == null)
             throw new Exception("$No existe ningún cadete con el ID {id}");
-    
+
         return cadeteSeleccionado;
     }
 
@@ -276,4 +287,4 @@
 
         return nuevoEstado;
     }
-}   
+}

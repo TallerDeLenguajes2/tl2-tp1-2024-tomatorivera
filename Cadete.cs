@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 public class Cadete
 {
     private const float pagoPorPedidoEntregado = 500f;
@@ -6,8 +8,14 @@ public class Cadete
     private string nombre;
     private string direccion;
     private string telefono;
-    private List<Pedido> pedidos;
 
+    public Cadete()
+    {
+        id = -1;
+        nombre = string.Empty;
+        direccion = string.Empty;
+        telefono = string.Empty;
+    }
 
     public Cadete(int id, string nombre, string direccion, string telefono)
     {
@@ -15,22 +23,20 @@ public class Cadete
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.pedidos = new List<Pedido>();
     }
 
     public int Id { get => id; set => id = value; }
-    public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
     public string Nombre { get => nombre; set => nombre = value; }
 
-    public float JornalACobrar()
+    /*public float JornalACobrar()
     {
         return pagoPorPedidoEntregado * pedidos.Where(p => p.Estado == Estado.COMPLETADO).Count();
-    }
+    }*/
 
-    public List<Pedido> BuscarPedidos(Estado estado)
+    /*public List<Pedido> BuscarPedidos(Estado estado)
     {
         return pedidos.Where(p => p.Estado == estado).ToList();
-    }
+    }*/
 
     public override string ToString()
     {
