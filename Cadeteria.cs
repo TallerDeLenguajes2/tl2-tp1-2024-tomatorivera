@@ -1,26 +1,35 @@
 using System.IO.Compression;
+using System.Text.Json.Serialization;
 
 public class Cadeteria
 {
+    [JsonPropertyName("nombre")]
     private string nombre;
+    [JsonPropertyName("telefono")]
     private string telefono;
     private List<Cadete> listadoCadetes;
     private List<Pedido> pedidosAsignados;
     private List<Pedido> pedidosTomados;
 
-    public Cadeteria(string nombre, string telefono)
+    public Cadeteria()
     {
-        this.nombre = nombre;
-        this.telefono = telefono;
-
+        nombre = string.Empty;
+        telefono = string.Empty;
         listadoCadetes = new List<Cadete>();
         pedidosAsignados = new List<Pedido>();
         pedidosTomados = new List<Pedido>();
     }
 
+    public Cadeteria(string nombre, string telefono) : this()
+    {
+        this.nombre = nombre;
+        this.telefono = telefono;
+    }
+
     public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
     public List<Pedido> PedidosAsignados { get => pedidosAsignados; set => pedidosAsignados = value; }
     public List<Pedido> PedidosTomados { get => pedidosTomados; set => pedidosTomados = value; }
+    public string Nombre { get => nombre; set => nombre = value; }
 
     public void TomarPedido(Pedido pedido)
     {

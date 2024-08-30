@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using persistencia;
 
 internal class Program
 {
@@ -8,9 +9,36 @@ internal class Program
     {
         try
         {
+            // Selecciono el tipo de acceso a los datos
+            AccesoDatos? acceso;
+            System.Console.WriteLine("--- Seleccione el tipo de acceso a los datos ---");
+            System.Console.WriteLine("\n\t1. CSV");
+            System.Console.WriteLine("\t2. JSON");
+            System.Console.Write("\n> Digite su opcion: ");
+            string strOpcion = Console.ReadLine() ?? string.Empty;
+
+            if (!int.TryParse(strOpcion, out int opcion))
+            {
+                MostrarError("Opción inválida. No se puede proceder con el cargado de datos.");
+                return;
+            }
+
+            acceso = opcion switch
+            {
+                1 => new AccesoCsv(),
+                2 => new AccesoJson(),
+                _ => null
+            };
+
+            if (acceso == null)
+            {
+                MostrarError("Opción inválida. No se puede proceder con el cargado de datos.");
+                return;
+            }
+
             // Cargo los datos de los csv
-            cadeteria = CrearCadeteria();
-            CargarCadetes(cadeteria);
+            cadeteria = CrearCadeteria(acceso);
+            CargarCadetes(acceso, cadeteria);
         }
         catch (Exception ex)
         {
@@ -22,7 +50,7 @@ internal class Program
         int opcionSalida = 5;
         do
         {
-            System.Console.WriteLine("### MENU PRINCIPAL ###\n");
+            System.Console.WriteLine($"\n\n\n### MENU PRINCIPAL - {cadeteria?.Nombre} ###\n");
             System.Console.WriteLine("\t1. Dar de alta un pedido");
             System.Console.WriteLine("\t2. Asignar un pedido a un cadete");
             System.Console.WriteLine("\t3. Cambiar el estado de un pedido");
@@ -128,9 +156,9 @@ internal class Program
         System.Console.WriteLine($"\n* Envíos totales del día: {totalEnvios}");
     }
 
-    private static Cadeteria CrearCadeteria()
+    private static Cadeteria CrearCadeteria(AccesoDatos acceso)
     {
-        var datosCsv = LeerCsv("datos_cadeteria.csv");
+        var datosCsv = acceso.LeerArchivo("datos_cadeteria.csv");
         var datos = datosCsv[0].Split(",");
 
         if (datos.Count() < 2) throw new Exception("No hay datos suficientes para instanciar la cadeteria");
@@ -138,20 +166,23 @@ internal class Program
         return new Cadeteria(datos[0], datos[1]);
     }
 
-    private static void CargarCadetes(Cadeteria cadeteria)
+    private static void CargarCadetes(AccesoDatos acceso, Cadeteria cadeteria)
     {
-        var datosCsv = LeerCsv("datos_cadetes.csv");
+        var datosCsv = acceso.LeerArchivo("datos_cadetes.csv");
 
         foreach (var linea in datosCsv)
         {
             var datos = linea.Split(",");
+
             if (datos.Count() < 4)
             {
                 System.Console.WriteLine($"\n[!] No se pudo cargar el cadete: {linea} - {datos}");
                 continue;
             }
+            if (!int.TryParse(datos[0], out int id))
+                continue;
 
-            cadeteria.AltaCadete(new Cadete(int.Parse(datos[0]), datos[1], datos[2], datos[3]));
+            cadeteria.AltaCadete(new Cadete(id, datos[1], datos[2], datos[3]));
         }
     }
 

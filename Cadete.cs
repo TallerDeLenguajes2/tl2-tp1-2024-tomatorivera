@@ -1,12 +1,17 @@
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 public class Cadete
 {
     private const float pagoPorPedidoEntregado = 500f;
 
+    [JsonPropertyName("id")]
     private int id;
+    [JsonPropertyName("nombre")]
     private string nombre;
+    [JsonPropertyName("direccion")]
     private string direccion;
+    [JsonPropertyName("telefono")]
     private string telefono;
 
     public Cadete()
