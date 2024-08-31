@@ -3,9 +3,7 @@ using System.Text.Json.Serialization;
 
 public class Cadeteria
 {
-    [JsonPropertyName("nombre")]
     private string nombre;
-    [JsonPropertyName("telefono")]
     private string telefono;
     private List<Cadete> listadoCadetes;
     private List<Pedido> pedidosAsignados;
@@ -26,10 +24,13 @@ public class Cadeteria
         this.telefono = telefono;
     }
 
+    [JsonPropertyName("nombre")]
+    public string Nombre { get => nombre; set => nombre = value; }
+    [JsonPropertyName("telefono")]
+    public string Telefono { get => telefono; set => telefono = value; }
     public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
     public List<Pedido> PedidosAsignados { get => pedidosAsignados; set => pedidosAsignados = value; }
     public List<Pedido> PedidosTomados { get => pedidosTomados; set => pedidosTomados = value; }
-    public string Nombre { get => nombre; set => nombre = value; }
 
     public void TomarPedido(Pedido pedido)
     {

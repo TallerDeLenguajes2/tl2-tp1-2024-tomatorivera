@@ -37,8 +37,8 @@ internal class Program
             }
 
             // Cargo los datos de los csv
-            cadeteria = CrearCadeteria(acceso);
-            CargarCadetes(acceso, cadeteria);
+            cadeteria = acceso.CrearCadeteria();
+            cadeteria.ListadoCadetes = acceso.CrearCadetes();
         }
         catch (Exception ex)
         {
@@ -154,58 +154,6 @@ internal class Program
         }
 
         System.Console.WriteLine($"\n* Envíos totales del día: {totalEnvios}");
-    }
-
-    private static Cadeteria CrearCadeteria(AccesoDatos acceso)
-    {
-        var datosCsv = acceso.LeerArchivo("datos_cadeteria.csv");
-        var datos = datosCsv[0].Split(",");
-
-        if (datos.Count() < 2) throw new Exception("No hay datos suficientes para instanciar la cadeteria");
-
-        return new Cadeteria(datos[0], datos[1]);
-    }
-
-    private static void CargarCadetes(AccesoDatos acceso, Cadeteria cadeteria)
-    {
-        var datosCsv = acceso.LeerArchivo("datos_cadetes.csv");
-
-        foreach (var linea in datosCsv)
-        {
-            var datos = linea.Split(",");
-
-            if (datos.Count() < 4)
-            {
-                System.Console.WriteLine($"\n[!] No se pudo cargar el cadete: {linea} - {datos}");
-                continue;
-            }
-            if (!int.TryParse(datos[0], out int id))
-                continue;
-
-            cadeteria.AltaCadete(new Cadete(id, datos[1], datos[2], datos[3]));
-        }
-    }
-
-    private static List<string> LeerCsv(string nombreArchivo, bool tieneCabecera = true)
-    {
-        var lineas = new List<string>();
-
-        using (FileStream archivoCsv = new FileStream(nombreArchivo, FileMode.Open))
-        {
-            using (StreamReader readerCsv = new StreamReader(archivoCsv))
-            {
-                // Salto la cabecera
-                if (tieneCabecera) readerCsv.ReadLine();
-
-                while (readerCsv.Peek() != -1)
-                {
-                    var linea = readerCsv.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(linea)) lineas.Add(linea);
-                }
-            }
-        }
-
-        return lineas;
     }
 
     private static void MostrarError(string error)

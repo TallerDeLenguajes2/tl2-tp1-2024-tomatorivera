@@ -5,13 +5,9 @@ public class Cadete
 {
     private const float pagoPorPedidoEntregado = 500f;
 
-    [JsonPropertyName("id")]
     private int id;
-    [JsonPropertyName("nombre")]
     private string nombre;
-    [JsonPropertyName("direccion")]
     private string direccion;
-    [JsonPropertyName("telefono")]
     private string telefono;
 
     public Cadete()
@@ -30,8 +26,14 @@ public class Cadete
         this.telefono = telefono;
     }
 
+    [JsonPropertyName("id")]
     public int Id { get => id; set => id = value; }
+    [JsonPropertyName("nombre")]
     public string Nombre { get => nombre; set => nombre = value; }
+    [JsonPropertyName("direccion")]
+    public string Direccion { get => direccion; set => direccion = value; }
+    [JsonPropertyName("telefono")]
+    public string Telefono { get => telefono; set => telefono = value; }
 
     /*public float JornalACobrar()
     {
