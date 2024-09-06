@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 
 public class Cadeteria
 {
+    private const float PRECIO_X_PEDIDO = 500;
+
     private string nombre;
     private string telefono;
     private List<Cadete> listadoCadetes;
@@ -66,8 +68,8 @@ public class Cadeteria
 
     public float JornalACobrar(int idCadete)
     {
-        float precioPorPedido = 500;
-        return precioPorPedido * pedidosAsignados.Where(p => p.Cadete.Id == idCadete).Count();
+        return PRECIO_X_PEDIDO * pedidosAsignados.Where(p => p.Cadete.Id == idCadete &&
+                                                             p.Estado == Estado.COMPLETADO).Count();
     }
 
     public List<Pedido> BuscarPedidos(int idCadete)
